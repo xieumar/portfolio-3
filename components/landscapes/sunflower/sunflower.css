@@ -1,0 +1,32 @@
+
+
+.ls-header {
+  position: relative;
+  height: clamp(100px, 10.4vw, 150px);
+  overflow: hidden;
+}
+
+.ls-scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Wide composition for desktop/tablet, compact composition for phones */
+.ls-compact {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .ls-header {
+    height: 110px;
+  }
+
+  .ls-wide {
+    display: none;
+  }
+
+  .ls-compact {
+    display: block;
+  }
+}

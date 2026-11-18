@@ -70,7 +70,7 @@ export default function SiteFooter({ landscape }: { landscape?: ReactNode }) {
           <p>
             © {site.year} {site.name}
           </p>
-          <p>Illustrated by hand, built with Next.js.</p>
+          <p>Illustrated by hand, built from concrete.</p>
         </div>
       </div>
     </footer>
