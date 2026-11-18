@@ -73,6 +73,45 @@ export function layoutField(o: FieldOptions): SunflowerSpec[] {
   return out;
 }
 
+/**
+ * A cluster of sunflowers across [x0, x1], sorted back-to-front. Used for the
+ * footer's sunflower patches, where flowers are grouped rather than spread evenly.
+ */
+export function layoutPatch(
+  x0: number,
+  x1: number,
+  ground: number,
+  seed: number,
+  count: number,
+  size = 1,
+): SunflowerSpec[] {
+  const rand = rng(seed);
+  const out: SunflowerSpec[] = [];
+  for (let i = 0; i < count; i++) {
+    const x = x0 + ((i + 0.15 + rand() * 0.7) / count) * (x1 - x0);
+    const depth = rand(); // 0 = back, 1 = front
+    const dur = 3 + rand() * 2;
+    const roll = rand();
+    out.push({
+      x,
+      y: ground - 3 + depth * 6,
+      h: (46 + depth * 44 + rand() * 18) * size,
+      r: (8 + depth * 4.5 + rand() * 2) * size,
+      seed: seed + i * 17,
+      lean: (rand() - 0.5) * 12 * size,
+      tilt: (rand() - 0.5) * 28,
+      facing: roll < 0.6 ? 1 : roll < 0.9 ? 0.72 : 0.42,
+      leaves: true,
+      sway: {
+        dur: Math.round(dur * 10) / 10,
+        delay: -Math.round(rand() * dur * 10) / 10,
+        amp: Math.round((1.5 + rand() * 2) * 10) / 10,
+      },
+    });
+  }
+  return out.sort((a, b) => a.y - b.y);
+}
+
 /** Grass tufts spread along the ground with varied height; front tufts are taller. */
 export function layoutGrass(
   width: number,

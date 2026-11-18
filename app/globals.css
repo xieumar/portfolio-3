@@ -435,8 +435,19 @@ a {
 }
 
 /* Footer */
+/* The illustration's sky blends into the page; the column area below sits on faint ruled paper. */
 .site-footer {
-  border-top: 1px solid var(--color-border);
+  position: relative;
+}
+
+.site-footer-body {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 27px,
+    rgba(119, 98, 74, 0.07) 27px,
+    rgba(119, 98, 74, 0.07) 28px
+  );
 }
 
 .site-footer-body {

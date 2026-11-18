@@ -18,6 +18,12 @@ export function ridge(width: number, base: number, amp: number, wave: number, ph
   return d;
 }
 
+/** y of the ridge at x, matching `ridge()` (used to stand tiny trees on a hill). */
+export function ridgeY(x: number, base: number, amp: number, wave: number, phase: number) {
+  const a = (x / wave) * Math.PI * 2 + phase;
+  return base + amp * (Math.sin(a) * 0.62 + Math.sin(a * 2.3 + phase * 1.7) * 0.38);
+}
+
 export interface HillsProps {
   width: number;
   /** bottom of the filled shapes */

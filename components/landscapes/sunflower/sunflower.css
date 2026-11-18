@@ -6,6 +6,12 @@
   overflow: hidden;
 }
 
+.ls-footer {
+  position: relative;
+  height: clamp(190px, 17.4vw, 250px);
+  overflow: hidden;
+}
+
 .ls-scene {
   display: block;
   width: 100%;
@@ -20,6 +26,10 @@
 @media (max-width: 767px) {
   .ls-header {
     height: 110px;
+  }
+
+  .ls-footer {
+    height: 190px;
   }
 
   .ls-wide {

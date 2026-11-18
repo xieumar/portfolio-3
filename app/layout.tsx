@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import SunflowerFooter from "@/components/landscapes/sunflower/SunflowerFooter";
 import SunflowerHeader from "@/components/landscapes/sunflower/SunflowerHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -31,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <div className="surface">
             <SiteHeader landscape={<SunflowerHeader />} />
             {children}
-            <SiteFooter />
+            <SiteFooter landscape={<SunflowerFooter />} />
           </div>
         </div>
       </body>
