@@ -12,4 +12,6 @@ export const ink = {
   cobalt: "#3459C7",
   tomato: "#E45B40",
   leafGreen: "#43835B",
+  skin: "#C68A5A", 
+  hair: "#3A2A21", 
 } as const;

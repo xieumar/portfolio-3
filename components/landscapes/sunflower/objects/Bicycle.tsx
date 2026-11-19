@@ -58,26 +58,72 @@ function Leg({ phase }: { phase: 0 | 1 }) {
   );
 }
 
+type Curl = [cx: number, cy: number, r: number];
+
+/** A clump of overlapping circles that reads as curly hair: outlined as one silhouette, with a ringlet in each curl. */
+function Curls({ circles }: { circles: Curl[] }) {
+  return (
+    <>
+      {circles.map(([cx, cy, r], i) => (
+        <circle key={`o${i}`} cx={cx} cy={cy} r={r} fill={ink.hair} stroke={ink.line} strokeWidth={0.9} />
+      ))}
+      {circles.map(([cx, cy, r], i) => (
+        <circle key={`f${i}`} cx={cx} cy={cy} r={r - 0.4} fill={ink.hair} stroke="none" />
+      ))}
+      {circles.map(([cx, cy, r], i) => (
+        <path
+          key={`c${i}`}
+          d={`M${f(cx - r * 0.45)} ${f(cy + r * 0.1)}a${f(r * 0.45)} ${f(r * 0.45)} 0 1 1 ${f(r * 0.6)} ${f(r * 0.55)}`}
+          fill="none"
+          stroke={ink.paper}
+          strokeWidth={0.4}
+          opacity={0.35}
+        />
+      ))}
+    </>
+  );
+}
+
+/** Curls blown back by the wind: each chain bobs on its own rhythm (`.bike-curl`, anchored at the head end). */
+const trailing: { circles: Curl[]; dur: number; delay: number }[] = [
+  // upper bundles
+  { circles: [[-2, -55, 2.6], [-5.8, -56.4, 2.4], [-9.6, -55.4, 2.2], [-13, -56.8, 1.8]], dur: 0.6, delay: -0.1 },
+  { circles: [[-3, -51.5, 3], [-7.2, -52.8, 2.7], [-11.2, -51.6, 2.4], [-15, -53, 2], [-18.4, -51.6, 1.5]], dur: 0.55, delay: 0 },
+  // middle bundles
+  { circles: [[-3.4, -48, 3.1], [-7.8, -48.8, 2.8], [-12, -47.6, 2.5], [-16, -49, 2], [-19.4, -47.6, 1.5]], dur: 0.7, delay: -0.25 },
+  { circles: [[-3, -45, 3], [-7.4, -44.6, 2.6], [-11.4, -45.8, 2.3], [-15, -44.4, 1.9]], dur: 0.5, delay: -0.15 },
+  // lower bundles
+  { circles: [[-2, -41.6, 2.7], [-6, -40.8, 2.4], [-9.8, -42, 2.1], [-13, -40.6, 1.7]], dur: 0.62, delay: -0.4 },
+  { circles: [[-1, -38.6, 2.3], [-4.6, -37.6, 2], [-8, -38.8, 1.7]], dur: 0.58, delay: -0.3 },
+];
+
 function Rider() {
   return (
     <g>
       {/* far leg, then body, then near leg */}
       <Leg phase={1} />
-      {/* ponytail streaming behind */}
-      <path d="M1.2 -49.5Q-3 -49 -5 -45.5Q-2 -46.5 1.5 -46Z" fill={ink.deep} strokeWidth={0.6} />
+      {/* curly hair streaming back in the wind */}
+      {trailing.map((c, i) => (
+        <g key={i} className="bike-curl" style={{ animationDuration: `${c.dur}s`, animationDelay: `${c.delay}s` }}>
+          <Curls circles={c.circles} />
+        </g>
+      ))}
       {/* torso leaning toward the bars */}
       <Limb d="M-8 -27L1.5 -39" fill={ink.cobalt} w={6.6} />
       {/* arm to the grip */}
       <Limb d="M2 -39L7 -33.5L10 -28.2" fill={ink.cobalt} w={3} />
-      <circle cx={10.2} cy={-27.6} r={1.7} fill={ink.butter} strokeWidth={0.7} />
-      {/* neck, head, helmet and face */}
-      <path d="M2.2 -41L4 -43.5" stroke={ink.butter} strokeWidth={2.4} />
-      <circle cx={5.8} cy={-47} r={4.6} fill={ink.butter} strokeWidth={0.9} />
-      <path d="M1.2 -47.6A4.7 4.7 0 0 1 10.6 -48.4L9.6 -49.2Q5.5 -51.6 1.6 -48.6Z" fill={ink.golden} strokeWidth={0.8} />
-      <path d="M9.4 -49.4L12.2 -48.2" strokeWidth={0.9} />
-      <circle cx={8.4} cy={-46.6} r={0.7} fill={ink.deep} stroke="none" />
+      <circle cx={10.2} cy={-27.6} r={1.7} fill={ink.skin} strokeWidth={0.7} />
+      {/* neck, head, hair and face */}
+      <path d="M2.2 -41L4 -43.5" stroke={ink.skin} strokeWidth={2.4} />
+      <Curls circles={[[0.6, -47.6, 3.6], [1.2, -52, 3.5], [5.2, -54, 3.4], [9, -52.6, 3], [-0.6, -43.6, 3], [2, -41.6, 2.4]]} />
+      <circle cx={5.8} cy={-47} r={4.6} fill={ink.skin} strokeWidth={0.9} />
+      {/* side-swept curly fringe, with a little sunflower tucked in */}
+      <Curls circles={[[4.2, -50, 2.4], [7.6, -50.6, 2.2], [10.3, -49.2, 1.6]]} />
+      <circle cx={2.6} cy={-53.6} r={1.5} fill={ink.golden} strokeWidth={0.5} />
+      <circle cx={2.6} cy={-53.6} r={0.6} fill={ink.deep} stroke="none" />
+      <circle cx={8.4} cy={-46.4} r={0.7} fill={ink.hair} stroke="none" />
       <path d="M7.2 -44.4Q8.6 -43.4 9.9 -44.6" fill="none" strokeWidth={0.6} />
-      <circle cx={9.2} cy={-45.2} r={0.9} fill={ink.raspberry} fillOpacity={0.45} stroke="none" />
+      <circle cx={9.2} cy={-45.2} r={0.9} fill={ink.tomato} fillOpacity={0.5} stroke="none" />
       <Leg phase={0} />
       {/* crank arms and pedals, turning with the legs */}
       <g transform="translate(-3 -9)">
