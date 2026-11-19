@@ -336,7 +336,7 @@
 .mb-door,
 .mb-envelope,
 .mb-flag,
-  cursor: pointer;
+.sign-plank {
   transform-box: fill-box;
   transition:
     transform var(--dur-react, 450ms) var(--ease-soft, ease),
