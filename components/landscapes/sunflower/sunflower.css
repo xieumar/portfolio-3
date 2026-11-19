@@ -275,15 +275,68 @@
   }
 }
 
+/* ---------- cyclist: rides across the footer, then is out of sight until the next cycle ---------- */
+.sf-ride {
+  --pedal: 0.5s;
+  animation: sf-fly-x var(--dur, 40s) linear var(--delay, 0s) infinite;
+  opacity: 0;
+}
+
+.bike-wheel {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: bike-spin 0.9s linear infinite;
+}
+
+.bike-thigh,
+.bike-shin {
+  animation-duration: var(--pedal);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.bike-thigh {
+  animation-name: bike-thigh;
+}
+
+.bike-shin {
+  animation-name: bike-shin;
+}
+
+@keyframes bike-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bike-thigh {
+  from {
+    transform: rotate(-50deg);
+  }
+  to {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes bike-shin {
+  from {
+    transform: rotate(70deg);
+  }
+  to {
+    transform: rotate(-44deg);
+  }
+}
+
 /* ---------- footer interactions (mailbox, signpost) ---------- */
-[data-object] {
+[data-object="mailbox"] {
   cursor: pointer;
 }
 
 .mb-door,
 .mb-envelope,
 .mb-flag,
-.sign-plank {
+  cursor: pointer;
   transform-box: fill-box;
   transition:
     transform var(--dur-react, 450ms) var(--ease-soft, ease),
@@ -322,11 +375,11 @@
 }
 
 .sign-plank {
+  cursor: pointer;
   transform-origin: 50% 50% !important;
 }
 
-[data-object="signpost"]:hover .sign-plank,
-[data-object="signpost"].is-open .sign-plank {
+.sign-plank:hover {
   transform: rotate(calc(var(--rot, 0) * 1deg));
 }
 
@@ -420,6 +473,7 @@
 
   /* critters rest in view instead of staying hidden */
   .sf-fly,
+  .sf-ride,
   .sf-bee,
   .sf-bird {
     opacity: 1;
@@ -432,5 +486,12 @@
   .fi-pop {
     transition: none;
     animation: none !important;
+  }
+}
+
+/* reduced motion: the cyclist stays parked mid-scene instead of riding */
+@media (prefers-reduced-motion: reduce) {
+  .sf-ride {
+    transform: translateX(calc((var(--x0) + var(--x1)) / 2));
   }
 }

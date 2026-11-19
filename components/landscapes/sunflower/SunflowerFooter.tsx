@@ -166,7 +166,7 @@ function Wide() {
         ))}
       </g>
 
-      <g id="signpost" data-object="signpost">
+      <g id="signpost">
         <Signpost x={612} y={g} scale={1.15} />
       </g>
       <g id="mailbox-area">
@@ -196,7 +196,7 @@ function Wide() {
         ))}
       </g>
       <g id="bicycle">
-        <Bicycle x={690} y={g + 2} scale={1.15} />
+        <Bicycle x={0} y={g + 2} scale={1.15} ride={{ dur: 40, delay: -6, x0: -80, x1: 1520 }} />
       </g>
       <Ground width={W} y={g + 3} seed={7} />
     </svg>
@@ -265,7 +265,7 @@ function Compact() {
           <Sunflower key={s.seed} {...s} />
         ))}
       </g>
-      <g id="signpost" data-object="signpost">
+      <g id="signpost">
         <Signpost x={232} y={g} scale={1} />
       </g>
       <Fence x={525} y={g} width={90} seed={4} />
@@ -286,6 +286,9 @@ function Compact() {
         {frontGrass.map((s) => (
           <Grass key={s.seed} {...s} />
         ))}
+      </g>
+      <g id="bicycle">
+        <Bicycle x={0} y={g + 2} scale={0.95} ride={{ dur: 34, delay: -9, x0: -60, x1: 700 }} />
       </g>
       <Ground width={W} y={g + 3} seed={7} />
     </svg>
