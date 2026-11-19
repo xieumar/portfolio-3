@@ -1,27 +1,28 @@
+import "../shared/landscape.css";
 import "./sunflower.css";
 import type { CSSProperties } from "react";
-import FooterInteractions from "./FooterInteractions";
-import LandscapeMotion from "./LandscapeMotion";
+import FooterInteractions from "../shared/FooterInteractions";
+import LandscapeMotion from "../shared/LandscapeMotion";
 import Bee from "./objects/Bee";
 import Bicycle from "./objects/Bicycle";
-import Bird from "./objects/Bird";
-import Bush from "./objects/Bush";
-import Butterfly from "./objects/Butterfly";
-import Cloud from "./objects/Cloud";
+import Bird from "../shared/objects/Bird";
+import Bush from "../shared/objects/Bush";
+import Butterfly from "../shared/objects/Butterfly";
+import Cloud from "../shared/objects/Cloud";
 import Cottage from "./objects/Cottage";
-import Fence from "./objects/Fence";
-import Grass from "./objects/Grass";
-import Ground from "./objects/Ground";
-import Hills, { ridgeY } from "./objects/Hills";
+import Fence from "../shared/objects/Fence";
+import Grass from "../shared/objects/Grass";
+import Ground from "../shared/objects/Ground";
+import Hills, { ridgeY } from "../shared/objects/Hills";
 import LittleHouse from "./objects/LittleHouse";
-import Mailbox from "./objects/Mailbox";
-import Signpost from "./objects/Signpost";
+import Mailbox from "../shared/objects/Mailbox";
+import Signpost from "../shared/objects/Signpost";
 import Sunflower from "./objects/Sunflower";
-import Tree from "./objects/Tree";
-import Wildflower, { type WildflowerKind } from "./objects/Wildflower";
+import Tree from "../shared/objects/Tree";
+import Wildflower, { type WildflowerKind } from "../shared/objects/Wildflower";
 import { layoutField, layoutGrass, layoutPatch } from "./objects/field";
-import { ink } from "./objects/palette";
-import { rng } from "./objects/rng";
+import { ink } from "../shared/objects/palette";
+import { rng } from "../shared/objects/rng";
 
 /** Wildflowers scattered across [x0,x1]; mostly white daisies, vivid colours only occasionally. */
 function scatterWildflowers(x0: number, x1: number, ground: number, seed: number, count: number) {

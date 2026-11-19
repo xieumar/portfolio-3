@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
-import { f, rng } from "./rng";
-import { ink } from "./palette";
+import { f, rng } from "../../shared/objects/rng";
+import { ink } from "../../shared/objects/palette";
 
 export interface SunflowerSpec {
   x: number;

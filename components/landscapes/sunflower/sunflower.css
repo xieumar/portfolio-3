@@ -1,32 +1,7 @@
 /* ==========================================================================
-   Sunflower landscape: layout + ambient animation
-   Every animated object reads its own --dur / --delay (and friends) from inline
-   custom properties, so no two objects move in sync. Only transform and opacity
-   are animated. The header and footer are independent animation systems.
+   Sunflower environment: motion that only exists here (flower nod, chimney smoke,
+   bees, the cyclist). Shared layout and ambient motion are in ../shared/landscape.css.
    ========================================================================== */
-
-.ls-header {
-  position: relative;
-  height: clamp(100px, 10.4vw, 150px);
-  overflow: hidden;
-}
-
-.ls-footer {
-  position: relative;
-  height: clamp(190px, 17.4vw, 250px);
-  overflow: hidden;
-}
-
-.ls-scene {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* Wide composition for desktop/tablet, compact composition for phones */
-.ls-compact {
-  display: none;
-}
 
 /* ---------- continuous: sway, breeze, drift ---------- */
 
@@ -34,41 +9,6 @@
 .sf-head {
   transform-origin: 0 0;
   animation: sf-sway var(--dur, 4s) ease-in-out var(--delay, 0s) infinite alternate;
-}
-
-/* Grass: a softer, slower breeze (4–7s). */
-.sf-grass {
-  transform-origin: 0 0;
-  animation: sf-sway var(--dur, 5s) ease-in-out var(--delay, 0s) infinite alternate;
-}
-
-/* Tree canopies: barely-there movement. */
-.sf-tree {
-  transform-origin: 0 0;
-  animation: sf-sway var(--dur, 7s) ease-in-out var(--delay, 0s) infinite alternate;
-}
-
-@keyframes sf-sway {
-  from {
-    transform: rotate(calc(var(--amp, 2deg) * -1));
-  }
-  to {
-    transform: rotate(var(--amp, 2deg));
-  }
-}
-
-/* Clouds cross the whole scene linearly; the loop point is fully off-screen, so there is no visible jump. */
-.sf-cloud {
-  animation: sf-cloud var(--dur, 32s) linear var(--delay, 0s) infinite;
-}
-
-@keyframes sf-cloud {
-  from {
-    transform: translateX(calc(var(--cx) * -1 - 90px));
-  }
-  to {
-    transform: translateX(calc(var(--span) - var(--cx) + 40px));
-  }
 }
 
 /* Chimney smoke */
@@ -87,70 +27,6 @@
   100% {
     opacity: 0;
     transform: translateY(-8px);
-  }
-}
-
-/* ---------- occasional: butterflies, bees, birds ----------
-   Each uses a long cycle in which the visible movement takes only part of the
-   time, so there are irregular pauses. Different cycle lengths drift apart. */
-
-/* Butterfly: crosses in the first ~45% of the cycle (8–14s), then rests invisibly. */
-.sf-fly {
-  animation: sf-fly-x var(--dur, 26s) linear var(--delay, 0s) infinite;
-  opacity: 0;
-}
-
-@keyframes sf-fly-x {
-  0% {
-    opacity: 0;
-    transform: translateX(var(--x0));
-  }
-  3% {
-    opacity: 1;
-  }
-  44% {
-    opacity: 1;
-    transform: translateX(var(--x1));
-  }
-  47%,
-  100% {
-    opacity: 0;
-    transform: translateX(var(--x1));
-  }
-}
-
-/* The up/down weave on a nested group curves the path. It loops a whole number of times per cycle. */
-.sf-fly-bob {
-  animation: sf-bob calc(var(--dur, 26s) * 0.2) ease-in-out var(--delay, 0s) infinite;
-}
-
-@keyframes sf-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  25% {
-    transform: translateY(-10px);
-  }
-  50% {
-    transform: translateY(4px);
-  }
-  75% {
-    transform: translateY(-7px);
-  }
-}
-
-.bf-wing {
-  transform-origin: 0 0;
-  animation: sf-flap 0.34s ease-in-out infinite alternate;
-}
-
-@keyframes sf-flap {
-  from {
-    transform: scaleX(1);
-  }
-  to {
-    transform: scaleX(0.3);
   }
 }
 
@@ -210,68 +86,6 @@
   }
   to {
     transform: scaleY(0.55);
-  }
-}
-
-/* Bird: one crossing of the sky (6–10s) in the first ~30% of a long cycle, then a long pause. */
-.sf-bird {
-  animation: sf-bird-ltr calc(var(--dur, 8s) * 3.3) linear var(--delay, 0s) infinite;
-  opacity: 0;
-}
-
-.sf-bird--rtl {
-  animation-name: sf-bird-rtl;
-}
-
-@keyframes sf-bird-ltr {
-  0% {
-    opacity: 0;
-    transform: translateX(calc(var(--cx) * -1 - 30px));
-  }
-  2% {
-    opacity: 1;
-  }
-  30% {
-    opacity: 1;
-    transform: translateX(calc(var(--span) - var(--cx) + 30px));
-  }
-  32%,
-  100% {
-    opacity: 0;
-    transform: translateX(calc(var(--span) - var(--cx) + 30px));
-  }
-}
-
-@keyframes sf-bird-rtl {
-  0% {
-    opacity: 0;
-    transform: translateX(calc(var(--span) - var(--cx) + 30px));
-  }
-  2% {
-    opacity: 1;
-  }
-  30% {
-    opacity: 1;
-    transform: translateX(calc(var(--cx) * -1 - 30px));
-  }
-  32%,
-  100% {
-    opacity: 0;
-    transform: translateX(calc(var(--cx) * -1 - 30px));
-  }
-}
-
-.bird-wings {
-  transform-origin: 0 0;
-  animation: sf-wingbeat 0.5s ease-in-out infinite alternate;
-}
-
-@keyframes sf-wingbeat {
-  from {
-    transform: scaleY(1);
-  }
-  to {
-    transform: scaleY(0.35);
   }
 }
 
@@ -414,169 +228,20 @@
   }
 }
 
-/* ---------- footer interactions (mailbox, signpost) ---------- */
-[data-object="mailbox"] {
-  cursor: pointer;
-}
-
-.mb-door,
-.mb-envelope,
-.mb-flag,
-.sign-plank {
-  transform-box: fill-box;
-  transition:
-    transform var(--dur-react, 450ms) var(--ease-soft, ease),
-    opacity var(--dur-react, 450ms) var(--ease-soft, ease);
-}
-
-.mb-door {
-  transform-origin: 50% 100% !important;
-}
-
-.mb-envelope {
-  transform-origin: 50% 100%;
-  transform: translateY(8px);
-}
-
-.mb-flag {
-  transform-origin: 0 100%;
-}
-
-/* open: door folds down, envelope rises out, flag drops (mail collected) */
-[data-object="mailbox"].is-open .mb-door {
-  transform: scaleY(-0.25);
-}
-
-[data-object="mailbox"].is-open .mb-envelope {
-  opacity: 1;
-  transform: translateY(-6px);
-}
-
-[data-object="mailbox"].is-open .mb-flag {
-  transform: rotate(75deg);
-}
-
-[data-object="mailbox"]:not(.is-open):hover .mb-flag {
-  transform: rotate(-8deg);
-}
-
-.sign-plank {
-  cursor: pointer;
-  transform-origin: 50% 50% !important;
-}
-
-.sign-plank:hover {
-  transform: rotate(calc(var(--rot, 0) * 1deg));
-}
-
-.fi-pop {
-  position: absolute;
-  z-index: 2;
-  min-width: 170px;
-  padding: 10px 14px;
-  background: var(--color-paper);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: 0 4px 14px rgba(33, 31, 26, 0.12);
-  transform: translate(-50%, calc(-100% - 10px));
-  animation: fi-pop-in var(--dur-hover, 220ms) var(--ease-soft, ease) both;
-}
-
-.fi-pop[data-below="true"] {
-  transform: translate(-50%, 10px);
-}
-
-.fi-title {
-  margin: 0 0 4px;
-  font-size: 0.75rem;
-  color: var(--color-ink-secondary);
-}
-
-.fi-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.fi-link {
-  display: block;
-  padding: 2px 0;
-  color: var(--color-ink);
-  text-decoration: none;
-}
-
-.fi-link:hover {
-  color: var(--color-cobalt);
-}
-
-@keyframes fi-pop-in {
-  from {
-    opacity: 0;
-  }
-}
-
-/* ---------- pause while off-screen / tab hidden (set by LandscapeMotion) ---------- */
-[data-active="false"] .ls-scene *,
-[data-active="false"].ls-header *,
-[data-active="false"].ls-footer * {
-  animation-play-state: paused !important;
-}
-
-/* ---------- responsive ---------- */
 @media (max-width: 767px) {
-  .ls-header {
-    height: 110px;
-  }
-
-  .ls-footer {
-    height: 190px;
-  }
-
-  .ls-wide {
-    display: none;
-  }
-
-  .ls-compact {
-    display: block;
-  }
-
-  /* Simplified motion on phones: keep flowers, clouds and the occasional critter; drop the rest. */
-  .sf-grass,
-  .sf-tree,
   .sf-smoke,
   .bee-wings {
     animation: none;
   }
 }
 
-/* ---------- reduced motion: a calm, still scene ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .ls-scene *,
-  .ls-scene *::before,
-  .ls-scene *::after {
-    animation: none !important;
-  }
-
-  /* critters rest in view instead of staying hidden */
-  .sf-fly,
-  .sf-ride,
   .sf-bee,
-  .sf-bird {
+  .sf-ride {
     opacity: 1;
   }
 
-  .mb-door,
-  .mb-envelope,
-  .mb-flag,
-  .sign-plank,
-  .fi-pop {
-    transition: none;
-    animation: none !important;
-  }
-}
-
-/* reduced motion: the cyclist stays parked mid-scene instead of riding */
-@media (prefers-reduced-motion: reduce) {
+  /* the cyclist stays parked mid-scene instead of riding */
   .sf-ride {
     transform: translateX(calc((var(--x0) + var(--x1)) / 2));
   }

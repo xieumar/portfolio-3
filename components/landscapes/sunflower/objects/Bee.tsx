@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
-import { f } from "./rng";
-import { ink } from "./palette";
+import { f } from "../../shared/objects/rng";
+import { ink } from "../../shared/objects/palette";
 
 export interface BeeSpec {
   x: number;

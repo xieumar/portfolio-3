@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import SunflowerFooter from "@/components/landscapes/sunflower/SunflowerFooter";
-import SunflowerHeader from "@/components/landscapes/sunflower/SunflowerHeader";
-import SiteFooter from "@/components/layout/SiteFooter";
-import SiteHeader from "@/components/layout/SiteHeader";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,9 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <div className="canvas">
           <div className="surface">
-            <SiteHeader landscape={<SunflowerHeader />} />
             {children}
-            <SiteFooter landscape={<SunflowerFooter />} />
           </div>
         </div>
       </body>

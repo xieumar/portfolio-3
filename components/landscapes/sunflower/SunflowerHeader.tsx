@@ -1,16 +1,17 @@
+import "../shared/landscape.css";
 import "./sunflower.css";
 import type { CSSProperties } from "react";
-import LandscapeMotion from "./LandscapeMotion";
+import LandscapeMotion from "../shared/LandscapeMotion";
 import Bee from "./objects/Bee";
-import Bird from "./objects/Bird";
-import Butterfly from "./objects/Butterfly";
-import Cloud from "./objects/Cloud";
-import Grass from "./objects/Grass";
-import Hills from "./objects/Hills";
+import Bird from "../shared/objects/Bird";
+import Butterfly from "../shared/objects/Butterfly";
+import Cloud from "../shared/objects/Cloud";
+import Grass from "../shared/objects/Grass";
+import Hills from "../shared/objects/Hills";
 import Sunflower from "./objects/Sunflower";
 import { layoutField, layoutGrass } from "./objects/field";
-import Ground from "./objects/Ground";
-import { ink } from "./objects/palette";
+import Ground from "../shared/objects/Ground";
+import { ink } from "../shared/objects/palette";
 
 interface SceneProps {
   width: number;

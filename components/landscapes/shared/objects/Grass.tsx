@@ -11,9 +11,11 @@ export interface GrassSpec {
   blades?: number;
   sway?: { dur: number; delay: number; amp: number };
   opacity?: number;
+  /** blade colour (defaults to the sunflower olive) */
+  color?: string;
 }
 
-export default function Grass({ x, y, len, seed, blades = 7, sway, opacity = 1 }: GrassSpec) {
+export default function Grass({ x, y, len, seed, blades = 7, sway, opacity = 1, color = ink.olive }: GrassSpec) {
   const rand = rng(seed);
   let d = "";
   for (let i = 0; i < blades; i++) {
@@ -33,7 +35,7 @@ export default function Grass({ x, y, len, seed, blades = 7, sway, opacity = 1 }
   return (
     <g transform={`translate(${f(x)} ${f(y)})`} opacity={opacity}>
       <g className={sway ? "sf-grass" : undefined} style={style}>
-        <path d={d} fill="none" stroke={ink.olive} strokeWidth={0.9} strokeLinecap="round" />
+        <path d={d} fill="none" stroke={color} strokeWidth={0.9} strokeLinecap="round" />
       </g>
     </g>
   );
