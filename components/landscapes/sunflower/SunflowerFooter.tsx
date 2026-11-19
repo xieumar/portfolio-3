@@ -1,5 +1,6 @@
 import "./sunflower.css";
 import type { CSSProperties } from "react";
+import FooterInteractions from "./FooterInteractions";
 import LandscapeMotion from "./LandscapeMotion";
 import Bee from "./objects/Bee";
 import Bicycle from "./objects/Bicycle";
@@ -297,6 +298,7 @@ export default function SunflowerFooter() {
     <LandscapeMotion className="ls-footer" data-landscape="sunflower-footer" aria-hidden>
       <Wide />
       <Compact />
+      <FooterInteractions />
     </LandscapeMotion>
   );
 }
