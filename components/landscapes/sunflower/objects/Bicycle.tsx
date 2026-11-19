@@ -26,17 +26,31 @@ function Wheel({ cx }: { cx: number }) {
   );
 }
 
-/** One pedalling leg: thigh swings at the hip, shin swings at the knee (`.bike-thigh` / `.bike-shin`). */
-function Leg({ phase }: { phase: 0 | 1 }) {
-  const style = { animationDelay: phase ? "calc(var(--pedal) * -1)" : undefined };
+/** Outlined limb: a dark outline stroke under a coloured fill stroke, so it matches the line-art style. */
+function Limb({ d, fill, w }: { d: string; fill: string; w: number }) {
   return (
-    <g transform="translate(-8 -25)">
+    <>
+      <path d={d} fill="none" stroke={ink.line} strokeWidth={w + 1.4} />
+      <path d={d} fill="none" stroke={fill} strokeWidth={w} />
+    </>
+  );
+}
+
+/**
+ * One pedalling leg. The thigh swings at the hip and the shin at the knee; the keyframes are
+ * inverse-kinematics poses, so the foot follows the pedal around the crank. `phase` 1 is half a turn behind.
+ */
+function Leg({ phase }: { phase: 0 | 1 }) {
+  const style = { animationDelay: phase ? "calc(var(--pedal) / -2)" : undefined };
+  return (
+    <g transform="translate(-8 -26)">
       <g className="bike-thigh" style={style}>
-        <path d="M0 0V11" stroke={ink.deep} strokeWidth={2.8} fill="none" />
-        <g transform="translate(0 11)">
+        <Limb d="M0 0V11.5" fill={ink.leafGreen} w={4.2} />
+        <g transform="translate(0 11.5)">
           <g className="bike-shin" style={style}>
-            <path d="M0 0V11" stroke={ink.deep} strokeWidth={2.4} fill="none" />
-            <path d="M-0.5 11.4H3.6" stroke={ink.tomato} strokeWidth={2.2} fill="none" />
+            <Limb d="M0 0V11.5" fill={ink.leafGreen} w={3.4} />
+            {/* shoe */}
+            <ellipse cx={1.6} cy={11.6} rx={3.2} ry={1.9} fill={ink.tomato} strokeWidth={0.7} />
           </g>
         </g>
       </g>
@@ -47,16 +61,32 @@ function Leg({ phase }: { phase: 0 | 1 }) {
 function Rider() {
   return (
     <g>
+      {/* far leg, then body, then near leg */}
       <Leg phase={1} />
-      {/* torso leaning toward the handlebars */}
-      <path d="M-10.5 -24.5L-4.5 -27L6.5 -40L1 -42.5Z" fill={ink.cobalt} />
+      {/* ponytail streaming behind */}
+      <path d="M1.2 -49.5Q-3 -49 -5 -45.5Q-2 -46.5 1.5 -46Z" fill={ink.deep} strokeWidth={0.6} />
+      {/* torso leaning toward the bars */}
+      <Limb d="M-8 -27L1.5 -39" fill={ink.cobalt} w={6.6} />
       {/* arm to the grip */}
-      <path d="M3.5 -40L8 -33.5L10 -27.8" stroke={ink.cobalt} strokeWidth={2.4} fill="none" />
-      {/* head and cap */}
-      <circle cx={6.5} cy={-46} r={4} fill={ink.butter} strokeWidth={0.8} />
-      <path d="M2.6 -47A4 4 0 0 1 10.4 -47Z" fill={ink.raspberry} strokeWidth={0.8} />
-      <path d="M2.6 -47H13" strokeWidth={0.8} />
+      <Limb d="M2 -39L7 -33.5L10 -28.2" fill={ink.cobalt} w={3} />
+      <circle cx={10.2} cy={-27.6} r={1.7} fill={ink.butter} strokeWidth={0.7} />
+      {/* neck, head, helmet and face */}
+      <path d="M2.2 -41L4 -43.5" stroke={ink.butter} strokeWidth={2.4} />
+      <circle cx={5.8} cy={-47} r={4.6} fill={ink.butter} strokeWidth={0.9} />
+      <path d="M1.2 -47.6A4.7 4.7 0 0 1 10.6 -48.4L9.6 -49.2Q5.5 -51.6 1.6 -48.6Z" fill={ink.golden} strokeWidth={0.8} />
+      <path d="M9.4 -49.4L12.2 -48.2" strokeWidth={0.9} />
+      <circle cx={8.4} cy={-46.6} r={0.7} fill={ink.deep} stroke="none" />
+      <path d="M7.2 -44.4Q8.6 -43.4 9.9 -44.6" fill="none" strokeWidth={0.6} />
+      <circle cx={9.2} cy={-45.2} r={0.9} fill={ink.raspberry} fillOpacity={0.45} stroke="none" />
       <Leg phase={0} />
+      {/* crank arms and pedals, turning with the legs */}
+      <g transform="translate(-3 -9)">
+        <g className="bike-crank">
+          <path d="M-5 0H5" strokeWidth={1.1} />
+          <path d="M3.4 0.2H7" strokeWidth={1.8} />
+          <path d="M-7 0.2H-3.4" strokeWidth={1.8} />
+        </g>
+      </g>
     </g>
   );
 }
@@ -74,7 +104,7 @@ export default function Bicycle({ x, y, scale = 1, ride }: BicycleSpec) {
       {/* seat, bars, pedal */}
       <path d="M-11 -23.5H-5" strokeWidth={1.6} />
       <path d="M10 -21L9 -27M7 -28L13 -27" fill="none" />
-      <path d="M-3 -9L-6 -5M-3 -9L0 -13" fill="none" strokeWidth={0.8} />
+      {!ride && <path d="M-3 -9L-6 -5M-3 -9L0 -13" fill="none" strokeWidth={0.8} />}
       {/* kickstand (parked only) */}
       {!ride && <path d="M-4 -9L-9 0" fill="none" strokeWidth={0.7} />}
       {ride && <Rider />}

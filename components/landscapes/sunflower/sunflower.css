@@ -277,7 +277,7 @@
 
 /* ---------- cyclist: rides across the footer, then is out of sight until the next cycle ---------- */
 .sf-ride {
-  --pedal: 0.5s;
+  --pedal: 0.9s;
   animation: sf-fly-x var(--dur, 40s) linear var(--delay, 0s) infinite;
   opacity: 0;
 }
@@ -285,15 +285,19 @@
 .bike-wheel {
   transform-box: fill-box;
   transform-origin: 50% 50%;
-  animation: bike-spin 0.9s linear infinite;
+  animation: bike-spin var(--pedal, 0.9s) linear infinite;
 }
 
 .bike-thigh,
 .bike-shin {
   animation-duration: var(--pedal);
-  animation-timing-function: ease-in-out;
+  animation-timing-function: linear;
   animation-iteration-count: infinite;
-  animation-direction: alternate;
+}
+
+.bike-crank {
+  transform-origin: 0 0;
+  animation: bike-spin var(--pedal) linear infinite;
 }
 
 .bike-thigh {
@@ -311,20 +315,86 @@
 }
 
 @keyframes bike-thigh {
-  from {
-    transform: rotate(-50deg);
+  0% {
+    transform: rotate(-60.8deg);
   }
-  to {
-    transform: rotate(10deg);
+  8.3% {
+    transform: rotate(-45.9deg);
+  }
+  16.7% {
+    transform: rotate(-31.3deg);
+  }
+  25% {
+    transform: rotate(-23.4deg);
+  }
+  33.3% {
+    transform: rotate(-24.5deg);
+  }
+  41.7% {
+    transform: rotate(-29.5deg);
+  }
+  50% {
+    transform: rotate(-37.1deg);
+  }
+  58.3% {
+    transform: rotate(-47.6deg);
+  }
+  66.7% {
+    transform: rotate(-61.0deg);
+  }
+  75% {
+    transform: rotate(-73.3deg);
+  }
+  83.3% {
+    transform: rotate(-77.8deg);
+  }
+  91.7% {
+    transform: rotate(-72.6deg);
+  }
+  100% {
+    transform: rotate(-60.8deg);
   }
 }
 
 @keyframes bike-shin {
-  from {
-    transform: rotate(70deg);
+  0% {
+    transform: rotate(68.5deg);
   }
-  to {
-    transform: rotate(-44deg);
+  8.3% {
+    transform: rotate(48.0deg);
+  }
+  16.7% {
+    transform: rotate(31.1deg);
+  }
+  25% {
+    transform: rotate(28.8deg);
+  }
+  33.3% {
+    transform: rotate(43.6deg);
+  }
+  41.7% {
+    transform: rotate(63.9deg);
+  }
+  50% {
+    transform: rotate(84.2deg);
+  }
+  58.3% {
+    transform: rotate(101.7deg);
+  }
+  66.7% {
+    transform: rotate(112.9deg);
+  }
+  75% {
+    transform: rotate(114.2deg);
+  }
+  83.3% {
+    transform: rotate(104.9deg);
+  }
+  91.7% {
+    transform: rotate(88.5deg);
+  }
+  100% {
+    transform: rotate(68.5deg);
   }
 }
 

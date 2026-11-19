@@ -45,34 +45,36 @@ const planks = [
 function WornPlank({ dir, w, seed, label }: { dir: 1 | -1; w: number; seed: number; label: string }) {
   const r = rng(seed * 7);
   const body = w - 6;
-  const grain = [-4.2, -0.8, 3.2].map((gy, i) => {
+  const grain = [-5.3, 5.2].map((gy, i) => {
     const x0 = (-body + 2 + r() * 5) * dir;
     const x1 = (body - 1 - r() * 8) * dir;
     const mid = (x0 + x1) / 2;
-    return `M${f(x0)} ${f(gy)}Q${f(mid)} ${f(gy + (r() - 0.5) * 2.4)} ${f(x1)} ${f(gy + (i - 1) * 0.5)}`;
+    return `M${f(x0)} ${f(gy)}Q${f(mid)} ${f(gy + (r() - 0.5) * 2.4)} ${f(x1)} ${f(gy + (i - 0.5) * 0.4)}`;
   });
-  const knotX = (r() * 0.5 + 0.2) * body * dir * (r() > 0.5 ? 1 : -1);
-  const crackX = (body * (0.45 + r() * 0.2)) * dir;
+  // keep knot, crack and paint wear clear of the lettering band (|y| < 4)
+  const knotX = (body * (0.5 + r() * 0.3)) * dir * (r() > 0.5 ? 1 : -1);
+  const knotY = r() > 0.5 ? -5.2 : 5.2;
+  const crackX = body * 0.88 * dir;
   // flecks of paint missing over the lettering
-  const flecks = Array.from({ length: 6 }, () => ({
-    x: (r() - 0.5) * (body * 1.5) + dir * 2.5,
-    y: (r() - 0.5) * 8,
-    rx: 0.7 + r() * 1.4,
-    ry: 0.5 + r() * 0.7,
+  const flecks = Array.from({ length: 5 }, () => ({
+    x: (r() - 0.5) * (body * 1.6) + dir * 2.5,
+    y: (r() > 0.5 ? 1 : -1) * (4.8 + r() * 1.6),
+    rx: 0.6 + r() * 1.1,
+    ry: 0.4 + r() * 0.5,
   }));
   return (
     <>
       <path d={plankPath(dir, w, seed)} fill={ink.butter} />
       {/* sun-bleached and damp patches */}
-      <path d={plankPath(dir, w, seed)} fill={ink.line} fillOpacity={0.1} stroke="none" transform={`translate(${dir * 6} 2.4) scale(0.55 0.5)`} />
+      <path d={plankPath(dir, w, seed)} fill={ink.line} fillOpacity={0.07} stroke="none" transform={`translate(${dir * 6} 2.4) scale(0.55 0.5)`} />
       <path d={`M${-body * dir} ${-H}H${(-body + 7) * dir}L${(-body + 4) * dir} ${H}H${-body * dir}Z`} fill={ink.leaf} fillOpacity={0.22} stroke="none" />
       <g fill="none" strokeWidth={0.4} opacity={0.45}>
         {grain.map((d, i) => (
           <path key={i} d={d} />
         ))}
       </g>
-      <ellipse cx={f(knotX)} cy={f(-5 + r() * 2)} rx={1.5} ry={1} fill={ink.line} fillOpacity={0.35} strokeWidth={0.4} />
-      <path d={`M${f(crackX)} ${-H + 0.4}l1.1 2.4l-1.3 2l1 2.6`} fill="none" strokeWidth={0.5} opacity={0.75} />
+      <ellipse cx={f(knotX)} cy={knotY} rx={1.3} ry={0.9} fill={ink.line} fillOpacity={0.35} strokeWidth={0.4} />
+      <path d={`M${f(crackX)} ${-H + 0.4}l0.9 1.8l-1 1.6`} fill="none" strokeWidth={0.5} opacity={0.75} />
       {/* faded lettering */}
       <text
         x={dir * 2.5}
@@ -80,10 +82,10 @@ function WornPlank({ dir, w, seed, label }: { dir: 1 | -1; w: number; seed: numb
         textAnchor="middle"
         dominantBaseline="middle"
         fill={ink.deep}
-        fillOpacity={0.72}
+        fillOpacity={0.9}
         stroke="none"
-        fontSize={6.6}
-        fontWeight={600}
+        fontSize={7}
+        fontWeight={700}
         style={{ fontFamily: "inherit", letterSpacing: "0.03em" }}
       >
         {label}
