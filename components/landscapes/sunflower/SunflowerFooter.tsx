@@ -1,4 +1,6 @@
 import "./sunflower.css";
+import type { CSSProperties } from "react";
+import LandscapeMotion from "./LandscapeMotion";
 import Bee from "./objects/Bee";
 import Bicycle from "./objects/Bicycle";
 import Bird from "./objects/Bird";
@@ -100,15 +102,15 @@ function Wide() {
   const frontGrass = layoutGrass(W, g + 2, 9, 110, [10, 30], { animate: true });
 
   return (
-    <svg className="ls-scene ls-wide" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMax slice" focusable="false" aria-hidden="true">
+    <svg className="ls-scene ls-wide" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMax slice" focusable="false" aria-hidden="true" style={{ "--span": `${W}px` } as CSSProperties}>
       <g id="sky">
         <Cloud x={110} y={26} scale={1.3} drift={{ dur: 36, delay: -8 }} />
         <Cloud x={470} y={48} scale={1} variant={1} drift={{ dur: 29, delay: -21 }} />
         <Cloud x={820} y={22} scale={1.5} drift={{ dur: 40, delay: -30 }} />
         <Cloud x={1180} y={44} scale={1.1} variant={1} drift={{ dur: 33, delay: -14 }} />
-        <Bird x={300} y={60} scale={1} cross={{ dur: 9, delay: -2, x0: -80, x1: 1560 }} />
-        <Bird x={350} y={72} scale={0.75} cross={{ dur: 10, delay: -3, x0: -80, x1: 1560 }} />
-        <Bird x={1050} y={50} scale={0.9} cross={{ dur: 8, delay: -12, x0: -1100, x1: 480 }} />
+        <Bird x={300} y={60} scale={1} cross={{ dur: 9, delay: -2 }} />
+        <Bird x={350} y={72} scale={0.75} cross={{ dur: 10, delay: -3 }} />
+        <Bird x={1050} y={50} scale={0.9} cross={{ dur: 8, delay: -12, rtl: true }} />
       </g>
 
       <g id="hills">
@@ -222,11 +224,11 @@ function Compact() {
   const frontGrass = layoutGrass(W, g + 2, 8, 46, [9, 24], { animate: true });
 
   return (
-    <svg className="ls-scene ls-compact" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMax slice" focusable="false" aria-hidden="true">
+    <svg className="ls-scene ls-compact" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMax slice" focusable="false" aria-hidden="true" style={{ "--span": `${W}px` } as CSSProperties}>
       <g id="sky">
         <Cloud x={60} y={22} scale={1} drift={{ dur: 30, delay: -6 }} />
         <Cloud x={380} y={34} scale={0.9} variant={1} drift={{ dur: 34, delay: -22 }} />
-        <Bird x={250} y={46} scale={0.9} cross={{ dur: 9, delay: -3, x0: -60, x1: 720 }} />
+        <Bird x={250} y={46} scale={0.9} cross={{ dur: 9, delay: -3 }} />
       </g>
       <g id="hills">
         <Hills width={W} bottom={g} far={104} near={nearBase} wave={wave} />
@@ -292,9 +294,9 @@ function Compact() {
 /** Detailed panoramic footer illustration: another view of the same sunflower countryside. */
 export default function SunflowerFooter() {
   return (
-    <div className="ls-footer" data-landscape="sunflower-footer" aria-hidden="true">
+    <LandscapeMotion className="ls-footer" data-landscape="sunflower-footer" aria-hidden>
       <Wide />
       <Compact />
-    </div>
+    </LandscapeMotion>
   );
 }

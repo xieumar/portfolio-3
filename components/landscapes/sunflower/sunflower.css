@@ -1,4 +1,9 @@
-
+/* ==========================================================================
+   Sunflower landscape: layout + ambient animation
+   Every animated object reads its own --dur / --delay (and friends) from inline
+   custom properties, so no two objects move in sync. Only transform and opacity
+   are animated. The header and footer are independent animation systems.
+   ========================================================================== */
 
 .ls-header {
   position: relative;
@@ -23,6 +28,261 @@
   display: none;
 }
 
+/* ---------- continuous: sway, breeze, drift ---------- */
+
+/* Flower heads nod gently around the neck; stems stay put. 3–5s, alternating = seamless. */
+.sf-head {
+  transform-origin: 0 0;
+  animation: sf-sway var(--dur, 4s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+
+/* Grass: a softer, slower breeze (4–7s). */
+.sf-grass {
+  transform-origin: 0 0;
+  animation: sf-sway var(--dur, 5s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+
+/* Tree canopies: barely-there movement. */
+.sf-tree {
+  transform-origin: 0 0;
+  animation: sf-sway var(--dur, 7s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+
+@keyframes sf-sway {
+  from {
+    transform: rotate(calc(var(--amp, 2deg) * -1));
+  }
+  to {
+    transform: rotate(var(--amp, 2deg));
+  }
+}
+
+/* Clouds cross the whole scene linearly; the loop point is fully off-screen, so there is no visible jump. */
+.sf-cloud {
+  animation: sf-cloud var(--dur, 32s) linear var(--delay, 0s) infinite;
+}
+
+@keyframes sf-cloud {
+  from {
+    transform: translateX(calc(var(--cx) * -1 - 90px));
+  }
+  to {
+    transform: translateX(calc(var(--span) - var(--cx) + 40px));
+  }
+}
+
+/* Chimney smoke */
+.sf-smoke {
+  animation: sf-smoke 6s ease-out infinite;
+}
+
+@keyframes sf-smoke {
+  0% {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  30% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* ---------- occasional: butterflies, bees, birds ----------
+   Each uses a long cycle in which the visible movement takes only part of the
+   time, so there are irregular pauses. Different cycle lengths drift apart. */
+
+/* Butterfly: crosses in the first ~45% of the cycle (8–14s), then rests invisibly. */
+.sf-fly {
+  animation: sf-fly-x var(--dur, 26s) linear var(--delay, 0s) infinite;
+  opacity: 0;
+}
+
+@keyframes sf-fly-x {
+  0% {
+    opacity: 0;
+    transform: translateX(var(--x0));
+  }
+  3% {
+    opacity: 1;
+  }
+  44% {
+    opacity: 1;
+    transform: translateX(var(--x1));
+  }
+  47%,
+  100% {
+    opacity: 0;
+    transform: translateX(var(--x1));
+  }
+}
+
+/* The up/down weave on a nested group curves the path. It loops a whole number of times per cycle. */
+.sf-fly-bob {
+  animation: sf-bob calc(var(--dur, 26s) * 0.2) ease-in-out var(--delay, 0s) infinite;
+}
+
+@keyframes sf-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+  75% {
+    transform: translateY(-7px);
+  }
+}
+
+.bf-wing {
+  transform-origin: 0 0;
+  animation: sf-flap 0.34s ease-in-out infinite alternate;
+}
+
+@keyframes sf-flap {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0.3);
+  }
+}
+
+/* Bee: appears at a flower, pauses, hops to the next one, pauses, then flies off. */
+.sf-bee {
+  animation: sf-bee var(--dur, 20s) linear var(--delay, 0s) infinite;
+  opacity: 0;
+}
+
+@keyframes sf-bee {
+  0% {
+    opacity: 0;
+    transform: translate(var(--p0x), var(--p0y));
+  }
+  5% {
+    opacity: 1;
+    transform: translate(var(--p0x), var(--p0y));
+    animation-timing-function: ease-in-out;
+  }
+  18% {
+    transform: translate(var(--p0x), var(--p0y));
+    animation-timing-function: ease-in-out;
+  }
+  34% {
+    transform: translate(var(--p1x), var(--p1y));
+  }
+  48% {
+    transform: translate(var(--p1x), var(--p1y));
+    animation-timing-function: ease-in-out;
+  }
+  64% {
+    transform: translate(var(--p2x), var(--p2y));
+  }
+  76% {
+    opacity: 1;
+    transform: translate(var(--p2x), var(--p2y));
+    animation-timing-function: ease-in;
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: translate(
+      calc(var(--p2x) + (var(--p2x) - var(--p1x))),
+      calc(var(--p2y) - 40px)
+    );
+  }
+}
+
+.bee-wings {
+  transform-origin: 0 0;
+  animation: sf-buzz 0.12s linear infinite alternate;
+}
+
+@keyframes sf-buzz {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0.55);
+  }
+}
+
+/* Bird: one crossing of the sky (6–10s) in the first ~30% of a long cycle, then a long pause. */
+.sf-bird {
+  animation: sf-bird-ltr calc(var(--dur, 8s) * 3.3) linear var(--delay, 0s) infinite;
+  opacity: 0;
+}
+
+.sf-bird--rtl {
+  animation-name: sf-bird-rtl;
+}
+
+@keyframes sf-bird-ltr {
+  0% {
+    opacity: 0;
+    transform: translateX(calc(var(--cx) * -1 - 30px));
+  }
+  2% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 1;
+    transform: translateX(calc(var(--span) - var(--cx) + 30px));
+  }
+  32%,
+  100% {
+    opacity: 0;
+    transform: translateX(calc(var(--span) - var(--cx) + 30px));
+  }
+}
+
+@keyframes sf-bird-rtl {
+  0% {
+    opacity: 0;
+    transform: translateX(calc(var(--span) - var(--cx) + 30px));
+  }
+  2% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 1;
+    transform: translateX(calc(var(--cx) * -1 - 30px));
+  }
+  32%,
+  100% {
+    opacity: 0;
+    transform: translateX(calc(var(--cx) * -1 - 30px));
+  }
+}
+
+.bird-wings {
+  transform-origin: 0 0;
+  animation: sf-wingbeat 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes sf-wingbeat {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0.35);
+  }
+}
+
+/* ---------- pause while off-screen / tab hidden (set by LandscapeMotion) ---------- */
+[data-active="false"] .ls-scene *,
+[data-active="false"].ls-header *,
+[data-active="false"].ls-footer * {
+  animation-play-state: paused !important;
+}
+
+/* ---------- responsive ---------- */
 @media (max-width: 767px) {
   .ls-header {
     height: 110px;
@@ -38,5 +298,29 @@
 
   .ls-compact {
     display: block;
+  }
+
+  /* Simplified motion on phones: keep flowers, clouds and the occasional critter; drop the rest. */
+  .sf-grass,
+  .sf-tree,
+  .sf-smoke,
+  .bee-wings {
+    animation: none;
+  }
+}
+
+/* ---------- reduced motion: a calm, still scene ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ls-scene *,
+  .ls-scene *::before,
+  .ls-scene *::after {
+    animation: none !important;
+  }
+
+  /* critters rest in view instead of staying hidden */
+  .sf-fly,
+  .sf-bee,
+  .sf-bird {
+    opacity: 1;
   }
 }

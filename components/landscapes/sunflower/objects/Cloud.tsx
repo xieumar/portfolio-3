@@ -7,7 +7,7 @@ export interface CloudSpec {
   y: number;
   scale?: number;
   variant?: 0 | 1;
-  /** drift animation hooks: `travel` is the distance covered per loop */
+  /** drift hooks: `dur` is one full crossing of the scene, in seconds */
   drift?: { dur: number; delay: number };
 }
 
@@ -18,7 +18,11 @@ const SHAPES = [
 
 export default function Cloud({ x, y, scale = 1, variant = 0, drift }: CloudSpec) {
   const style = drift
-    ? ({ "--dur": `${drift.dur}s`, "--delay": `${drift.delay}s` } as CSSProperties)
+    ? ({
+        "--dur": `${drift.dur}s`,
+        "--delay": `${drift.delay}s`,
+        "--cx": `${f(x)}px`,
+      } as CSSProperties)
     : undefined;
   return (
     <g transform={`translate(${f(x)} ${f(y)})`}>

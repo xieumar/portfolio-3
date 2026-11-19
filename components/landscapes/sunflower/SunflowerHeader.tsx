@@ -1,4 +1,6 @@
 import "./sunflower.css";
+import type { CSSProperties } from "react";
+import LandscapeMotion from "./LandscapeMotion";
 import Bee from "./objects/Bee";
 import Bird from "./objects/Bird";
 import Butterfly from "./objects/Butterfly";
@@ -41,6 +43,7 @@ function Scene({ variant, width, height }: SceneProps & { variant: "wide" | "com
       preserveAspectRatio="xMidYMax slice"
       focusable="false"
       aria-hidden="true"
+      style={{ "--span": `${width}px` } as CSSProperties}
     >
       <g id="sky">
         {wide ? (
@@ -48,15 +51,15 @@ function Scene({ variant, width, height }: SceneProps & { variant: "wide" | "com
             <Cloud x={190} y={14} scale={0.95} drift={{ dur: 34, delay: -6 }} />
             <Cloud x={640} y={10} scale={0.8} variant={1} drift={{ dur: 28, delay: -19 }} />
             <Cloud x={1090} y={20} scale={1} drift={{ dur: 38, delay: -29 }} />
-            <Bird x={420} y={34} scale={0.9} cross={{ dur: 8, delay: -2, x0: -80, x1: 1560 }} />
-            <Bird x={470} y={42} scale={0.7} cross={{ dur: 9, delay: -3, x0: -80, x1: 1560 }} />
-            <Bird x={1180} y={30} scale={0.8} cross={{ dur: 7, delay: -11, x0: -80, x1: 1560 }} />
+            <Bird x={420} y={34} scale={0.9} cross={{ dur: 8, delay: -2 }} />
+            <Bird x={470} y={42} scale={0.7} cross={{ dur: 9, delay: -3 }} />
+            <Bird x={1180} y={30} scale={0.8} cross={{ dur: 7, delay: -11 }} />
           </>
         ) : (
           <>
             <Cloud x={70} y={12} scale={0.8} drift={{ dur: 30, delay: -5 }} />
             <Cloud x={420} y={20} scale={0.7} variant={1} drift={{ dur: 34, delay: -20 }} />
-            <Bird x={260} y={30} scale={0.8} cross={{ dur: 8, delay: -3, x0: -60, x1: 720 }} />
+            <Bird x={260} y={30} scale={0.8} cross={{ dur: 8, delay: -3 }} />
           </>
         )}
       </g>
@@ -114,9 +117,9 @@ function Scene({ variant, width, height }: SceneProps & { variant: "wide" | "com
 /** Decorative panoramic header illustration. Sits directly under the navigation. */
 export default function SunflowerHeader() {
   return (
-    <div className="ls-header" data-landscape="sunflower-header" aria-hidden="true">
+    <LandscapeMotion className="ls-header" data-landscape="sunflower-header" aria-hidden>
       <Scene variant="wide" width={1440} height={150} />
       <Scene variant="compact" width={640} height={120} />
-    </div>
+    </LandscapeMotion>
   );
 }

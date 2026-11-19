@@ -11,6 +11,9 @@ export interface BeeSpec {
 }
 
 export default function Bee({ x, y, scale = 1, hop }: BeeSpec) {
+  // The bee faces right; flip it when its route heads left.
+  const pts = hop?.points ?? [];
+  const flip = pts.length > 1 && pts[pts.length - 1][0] < pts[0][0] ? -1 : 1;
   const vars: Record<string, string> = {};
   hop?.points.forEach(([px, py], i) => {
     vars[`--p${i}x`] = `${px}px`;
@@ -22,7 +25,7 @@ export default function Bee({ x, y, scale = 1, hop }: BeeSpec) {
   return (
     <g transform={`translate(${f(x)} ${f(y)})`}>
       <g className={hop ? "sf-bee" : undefined} style={style}>
-        <g transform={`scale(${scale})`} strokeLinejoin="round" strokeLinecap="round">
+        <g transform={`scale(${flip * scale} ${scale})`} strokeLinejoin="round" strokeLinecap="round">
           <g className="bee-wings">
             <ellipse
               cx={0.5}
