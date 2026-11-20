@@ -8,6 +8,7 @@ import Butterfly from "../shared/objects/Butterfly";
 import Cloud from "../shared/objects/Cloud";
 import Grass from "../shared/objects/Grass";
 import Hills from "../shared/objects/Hills";
+import Night from "../shared/objects/Night";
 import Sunflower from "./objects/Sunflower";
 import { layoutField, layoutGrass } from "./objects/field";
 import Ground from "../shared/objects/Ground";
@@ -119,6 +120,7 @@ function Scene({ variant, width, height }: SceneProps & { variant: "wide" | "com
 export default function SunflowerHeader() {
   return (
     <LandscapeMotion className="ls-header" data-landscape="sunflower-header" aria-hidden>
+      <Night id="night-header" width={1440} height={150} seed={101} stars={70} moon={{ x: 1230, y: 40, r: 15 }} blend />
       <Scene variant="wide" width={1440} height={150} />
       <Scene variant="compact" width={640} height={120} />
     </LandscapeMotion>

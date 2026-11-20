@@ -1,10 +1,10 @@
 /* ==========================================================================
    Shared landscape styles: layout, ambient flora/fauna, footer interactions.
-   Every environment (sunflower, coastal, wildflower, mountain) builds on this.
+   Shared by the landscape scenes (currently the sunflower field).
    Every animated object reads its own --dur / --delay (and friends) from inline
    custom properties, so no two objects move in sync. Only transform and opacity
    are animated. The header and footer are independent animation systems.
-   Environment-specific motion lives next to each environment.
+   Scene-specific motion lives next to each scene.
    ========================================================================== */
 
 .ls-header {
@@ -20,9 +20,78 @@
 }
 
 .ls-scene {
+  position: relative;
+  z-index: 1; /* above the night sky, below the dusk tint */
   display: block;
   width: 100%;
   height: 100%;
+  transition: filter 500ms var(--ease-soft, ease);
+}
+
+/* ---------- night (dark theme) ----------
+   The night sky is a separate svg behind the scene; the scene is dimmed and tinted blue on top. */
+.ls-night {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 500ms var(--ease-soft, ease),
+    visibility 0s linear 500ms;
+}
+
+.ls-star {
+  opacity: var(--o, 0.8);
+}
+
+:root[data-theme="dark"] .ls-night {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+:root[data-theme="dark"] .ls-star {
+  animation: ls-twinkle var(--dur, 4s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+
+@keyframes ls-twinkle {
+  from {
+    opacity: 0.15;
+  }
+  to {
+    opacity: var(--o, 0.9);
+  }
+}
+
+:root[data-theme="dark"] .ls-scene {
+  filter: brightness(0.5) saturate(0.7) contrast(1.05);
+}
+
+/* A cool blue dusk tint over the whole scene (the footer's popup stays above it). */
+.ls-header::after,
+.ls-footer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(30, 50, 130, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 500ms var(--ease-soft, ease);
+}
+
+/* The header's tint fades in from the top so the sky meets the page background without a seam. */
+.ls-header::after {
+  mask-image: linear-gradient(to bottom, transparent, #000 55%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 55%);
+}
+
+:root[data-theme="dark"] .ls-header::after,
+:root[data-theme="dark"] .ls-footer::after {
+  opacity: 1;
 }
 
 /* Wide composition for desktop/tablet, compact composition for phones */
@@ -328,7 +397,8 @@
 @media (prefers-reduced-motion: reduce) {
   .ls-scene *,
   .ls-scene *::before,
-  .ls-scene *::after {
+  .ls-scene *::after,
+  .ls-night * {
     animation: none !important;
   }
 

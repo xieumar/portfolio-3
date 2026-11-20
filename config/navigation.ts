@@ -3,14 +3,12 @@ export interface NavItem {
   href: string;
 }
 
-/** Main navigation (the Contact call-to-action is rendered separately). */
-export const mainNav: NavItem[] = [
-  { label: "Welcome", href: "/" },
-  { label: "My Work", href: "/work" },
+/** The header navigation (the site name, which links home, and the theme toggle are rendered separately). */
+export const navItems: NavItem[] = [
   { label: "About", href: "/about" },
+  { label: "Work", href: "/work" },
+  { label: "Contact", href: "/contact" },
 ];
 
-export const contactNav: NavItem = { label: "Contact", href: "/contact" };
-
 /** Every destination, used by the footer sitemap and the footer signpost. */
-export const allDestinations: NavItem[] = [...mainNav, contactNav];
+export const allDestinations: NavItem[] = [{ label: "Welcome", href: "/" }, ...navItems];

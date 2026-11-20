@@ -16,6 +16,7 @@ import Ground from "../shared/objects/Ground";
 import Hills, { ridgeY } from "../shared/objects/Hills";
 import LittleHouse from "./objects/LittleHouse";
 import Mailbox from "../shared/objects/Mailbox";
+import Night from "../shared/objects/Night";
 import Signpost from "../shared/objects/Signpost";
 import Sunflower from "./objects/Sunflower";
 import Tree from "../shared/objects/Tree";
@@ -300,6 +301,7 @@ function Compact() {
 export default function SunflowerFooter() {
   return (
     <LandscapeMotion className="ls-footer" data-landscape="sunflower-footer" aria-hidden>
+      <Night id="night-footer" width={1440} height={250} seed={202} stars={110} moon={{ x: 1000, y: 60, r: 20 }} />
       <Wide />
       <Compact />
       <FooterInteractions />
