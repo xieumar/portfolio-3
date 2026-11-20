@@ -2,16 +2,11 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
+import { softButton } from "@/components/ui/styles";
 import { site } from "@/config/site";
 import TransitionLink from "./TransitionLink";
 
 const { intro } = site;
-
-// The main button matches the highlighted word in the headline.
-const cta =
-  "inline-flex items-center gap-2 rounded-sm border border-soft bg-soft px-5 py-3 font-medium text-ink " +
-  "transition-[background-color,border-color,transform] duration-(--dur-hover) ease-soft " +
-  "hover:bg-[color-mix(in_srgb,var(--env-soft)_80%,var(--env-accent))] active:translate-y-px";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -91,7 +86,7 @@ export default function HeroIntro() {
         </motion.p>
 
         <motion.div className="flex flex-wrap items-center gap-6" {...rise(0.3)}>
-          <TransitionLink href="/work" label="Work" className={cta}>
+          <TransitionLink href="/work" label="Work" className={softButton}>
             See my work
           </TransitionLink>
           <TransitionLink href="/contact" label="Contact" className="link-subtle py-1 font-medium">

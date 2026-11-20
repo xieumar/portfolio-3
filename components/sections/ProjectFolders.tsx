@@ -147,7 +147,7 @@ const grid = "grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 min-[1200px]:grid
 export default function ProjectFolders() {
   return (
     <MotionConfig reducedMotion="user">
-      <section className="px-(--pad-x) pt-[calc(var(--section-space)/2)] pb-(--section-space)" aria-labelledby="projects-title">
+      <section className="px-(--pad-x) pt-[calc(var(--section-space)/2)] pb-[calc(var(--section-space)/2)]" aria-labelledby="projects-title">
         <div className="mb-14 flex items-baseline justify-between gap-4">
           <h2 id="projects-title" className="text-[clamp(1.5rem,2.6vw,2.25rem)] font-medium tracking-[-0.03em]">
             Selected work

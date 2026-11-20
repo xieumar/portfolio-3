@@ -4,6 +4,7 @@ import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } f
 import { useRef } from "react";
 import PicnicScene from "@/components/landscapes/sunflower/PicnicScene";
 import TransitionLink from "@/components/layout/TransitionLink";
+import { softButton } from "@/components/ui/styles";
 
 // Placeholder copy: replace with the real thing.
 const statement =
@@ -13,12 +14,6 @@ const bio = [
   "I'm a frontend developer who turns designs into fast, accessible websites. I like the place where design and code meet, and I'm happiest when a small detail makes someone smile.",
   "Away from the screen you'll find me wandering, sketching, and collecting ideas for the next thing to build.",
 ];
-
-// Same look as the hero's main button.
-const button =
-  "inline-flex items-center gap-2 rounded-sm border border-soft bg-soft px-5 py-3 font-medium text-ink " +
-  "transition-[background-color,border-color,transform] duration-(--dur-hover) ease-soft " +
-  "hover:bg-[color-mix(in_srgb,var(--env-soft)_80%,var(--env-accent))] active:translate-y-px";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -115,7 +110,7 @@ export default function AboutSection() {
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.7, ease }}
           >
-            <TransitionLink href="/about" label="About" className={button}>
+            <TransitionLink href="/about" label="About" className={softButton}>
               Get to know me
             </TransitionLink>
           </motion.div>

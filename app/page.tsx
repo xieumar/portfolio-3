@@ -1,6 +1,7 @@
 import SunflowerHeader from "@/components/landscapes/sunflower/SunflowerHeader";
 import HeroIntro from "@/components/layout/HeroIntro";
 import AboutSection from "@/components/sections/AboutSection";
+import ContactSection from "@/components/sections/ContactSection";
 import ProjectFolders from "@/components/sections/ProjectFolders";
 
 /* The hero is 90% of the viewport tall, so the field of flowers ends about 90% down the first screen.
@@ -20,6 +21,7 @@ export default function Home() {
       </section>
        <AboutSection />
       <ProjectFolders />
+      <ContactSection />
     </main>
   );
 }
