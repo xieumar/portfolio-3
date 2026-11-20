@@ -81,13 +81,13 @@ function Folder({ project, index }: { project: Project; index: number }) {
 
   return (
     <motion.li
+      className="w-full sm:w-[88%]"
       initial={{ opacity: 0, y: 48, rotate: index % 2 ? 2.5 : -2.5 }}
       whileInView={{ opacity: 1, y: 0, rotate: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: (index % 4) * 0.09 }}
     >
       <motion.div
-        data-folder=""
         className="[--folder-line:color-mix(in_srgb,var(--color-earth)_75%,transparent)] [--tab:26px]"
         style={{ "--tone": project.tone, rotateX: tiltX, rotateY: tiltY, transformPerspective: 1000 } as CSSProperties}
         variants={lift}
@@ -101,7 +101,7 @@ function Folder({ project, index }: { project: Project; index: number }) {
         <TransitionLink
           href={project.href}
           label="Work"
-          className="relative block aspect-[5/4] [perspective:900px] transition-opacity duration-300 ease-soft"
+          className="relative block aspect-[5/4] [perspective:900px]"
           aria-label={`${project.title}, ${project.category}, ${project.year}`}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
@@ -140,16 +140,14 @@ function Folder({ project, index }: { project: Project; index: number }) {
   );
 }
 
-// 1 / 2 / 4 columns. While one folder is hovered, the others step back.
-const grid =
-  "grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 min-[1200px]:grid-cols-4 " +
-  "[&:has([data-folder]:hover)_[data-folder]:not(:hover)_a]:opacity-45";
+// 1 / 2 / 4 columns.
+const grid = "grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 min-[1200px]:grid-cols-4";
 
 /** Selected work, shown as a row of folders that open on hover. */
 export default function ProjectFolders() {
   return (
     <MotionConfig reducedMotion="user">
-      <section className="px-(--pad-x) py-(--section-space)" aria-labelledby="projects-title">
+      <section className="px-(--pad-x) pt-[calc(var(--section-space)/2)] pb-(--section-space)" aria-labelledby="projects-title">
         <div className="mb-14 flex items-baseline justify-between gap-4">
           <h2 id="projects-title" className="text-[clamp(1.5rem,2.6vw,2.25rem)] font-medium tracking-[-0.03em]">
             Selected work

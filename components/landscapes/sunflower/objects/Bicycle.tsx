@@ -27,7 +27,7 @@ function Wheel({ cx }: { cx: number }) {
 }
 
 /** Outlined limb: a dark outline stroke under a coloured fill stroke, so it matches the line-art style. */
-function Limb({ d, fill, w }: { d: string; fill: string; w: number }) {
+export function Limb({ d, fill, w }: { d: string; fill: string; w: number }) {
   return (
     <>
       <path d={d} fill="none" stroke={ink.line} strokeWidth={w + 1.4} />
@@ -61,7 +61,7 @@ function Leg({ phase }: { phase: 0 | 1 }) {
 type Curl = [cx: number, cy: number, r: number];
 
 /** A clump of overlapping circles that reads as curly hair: outlined as one silhouette, with a ringlet in each curl. */
-function Curls({ circles }: { circles: Curl[] }) {
+export function Curls({ circles }: { circles: Curl[] }) {
   return (
     <>
       {circles.map(([cx, cy, r], i) => (
