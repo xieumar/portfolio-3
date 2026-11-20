@@ -26,6 +26,10 @@ const NavTransitionContext = createContext<NavTransition>({ go: () => {} });
 
 export const useNavTransition = () => useContext(NavTransitionContext);
 
+// Two full-screen panels: the deeper golden accent underneath, the pale golden panel (the colour of the
+// headline highlight) on top, carrying the destination's name.
+const panel = "fixed inset-0 grid place-items-center";
+
 const wipeEase = [0.76, 0, 0.24, 1] as const;
 const riseEase = [0.22, 1, 0.36, 1] as const;
 
@@ -96,7 +100,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         {target && (
           <motion.div
             key="overlay-accent"
-            className="page-overlay page-overlay-accent"
+            className={`${panel} z-100 bg-accent`}
             aria-hidden="true"
             variants={accentWipe}
             initial="out"
@@ -107,7 +111,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         {target && (
           <motion.div
             key="overlay-soft"
-            className="page-overlay page-overlay-soft"
+            className={`${panel} z-101 bg-soft text-ink`}
             role="status"
             aria-live="polite"
             variants={softWipe}
@@ -121,20 +125,20 @@ export default function PageTransition({ children }: { children: ReactNode }) {
               }
             }}
           >
-            <div className="page-overlay-inner">
+            <div className="flex flex-col items-center gap-2 px-(--pad-x) text-center">
               <motion.p
-                className="page-overlay-kicker"
+                className="font-mono text-sm tracking-[0.12em] text-ink/70 uppercase"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0, transition: { delay: 0.3, duration: 0.35 } }}
               >
                 Heading to
               </motion.p>
 
-              <span className="page-overlay-label" aria-label={target.label}>
+              <span className="flex justify-center text-[clamp(3.5rem,17vw,13rem)] leading-none font-semibold tracking-[-0.05em]" aria-label={target.label}>
                 {Array.from(target.label).map((letter, i) => (
-                  <span className="page-overlay-letter-mask" key={i} aria-hidden="true">
+                  <span className="inline-block overflow-hidden pb-[0.1em]" key={i} aria-hidden="true">
                     <motion.span
-                      className="page-overlay-letter"
+                      className="inline-block origin-[0_100%]"
                       initial={{ y: "115%", rotate: 6 }}
                       animate={{
                         y: 0,
@@ -148,9 +152,9 @@ export default function PageTransition({ children }: { children: ReactNode }) {
                 ))}
               </span>
 
-              <span className="page-overlay-track" aria-hidden="true">
+              <span className="mt-6 block h-[3px] w-[min(220px,50vw)] overflow-hidden rounded-xs bg-ink/12" aria-hidden="true">
                 <motion.span
-                  className="page-overlay-fill"
+                  className="block h-full origin-left bg-ink"
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1, transition: { duration: 0.6, ease: "easeInOut", delay: 0.35 } }}
                 />

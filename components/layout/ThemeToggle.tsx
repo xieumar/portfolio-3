@@ -34,7 +34,7 @@ function Moon() {
   );
 }
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ className }: { className?: string }) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   function toggle() {
@@ -52,7 +52,7 @@ export default function ThemeToggle() {
   return (
     <button
       type="button"
-      className="theme-toggle"
+      className={`inline-grid ${className ?? ""}`}
       onClick={toggle}
       aria-pressed={theme === null ? undefined : dark}
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
@@ -61,7 +61,7 @@ export default function ThemeToggle() {
         {theme !== null && (
           <motion.span
             key={theme}
-            className="theme-toggle-icon"
+            className="inline-grid place-items-center"
             initial={{ rotate: -80, opacity: 0, scale: 0.6 }}
             animate={{ rotate: 0, opacity: 1, scale: 1 }}
             exit={{ rotate: 80, opacity: 0, scale: 0.6 }}

@@ -7,6 +7,12 @@ import TransitionLink from "./TransitionLink";
 
 const { intro } = site;
 
+// The main button matches the highlighted word in the headline.
+const cta =
+  "inline-flex items-center gap-2 rounded-sm border border-soft bg-soft px-5 py-3 font-medium text-ink " +
+  "transition-[background-color,border-color,transform] duration-(--dur-hover) ease-soft " +
+  "hover:bg-[color-mix(in_srgb,var(--env-soft)_80%,var(--env-accent))] active:translate-y-px";
+
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const rise = (delay: number) => ({
@@ -37,7 +43,7 @@ function RotatingWord({ words }: { words: readonly string[] }) {
 
   return (
     <motion.span
-      className="hero-rotator"
+      className="-my-[0.04em] inline-block overflow-hidden bg-soft py-[0.04em] align-top whitespace-nowrap transition-colors duration-400 ease-soft"
       aria-hidden="true"
       initial={false}
       animate={{ width }}
@@ -47,7 +53,7 @@ function RotatingWord({ words }: { words: readonly string[] }) {
         <motion.span
           key={words[index]}
           ref={measure}
-          className="hero-rotator-word"
+          className="inline-block px-[0.08em]"
           initial={{ y: "100%", opacity: 0, filter: "blur(6px)" }}
           animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
           exit={{ y: "-100%", opacity: 0, filter: "blur(6px)" }}
@@ -65,11 +71,11 @@ export default function HeroIntro() {
   const { before, words, after } = intro.headline;
 
   return (
-    <section className="hero-intro" aria-labelledby="hero-title">
-      <div className="hero-col hero-col-main">
+    <section className="grid flex-1 grid-cols-1 content-center items-end gap-y-8 px-(--pad-x) pt-24 pb-10 min-[900px]:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] min-[900px]:gap-x-12" aria-labelledby="hero-title">
+      <div className="flex flex-col items-start gap-4 self-start">
         <motion.h1
           id="hero-title"
-          className="hero-title"
+          className="text-[clamp(1.6rem,3.8vw,3.75rem)] leading-[1.1] font-medium tracking-[-0.035em] text-balance"
           aria-label={`${before} ${words[0]} ${after}`}
           {...rise(0.1)}
         >
@@ -79,16 +85,16 @@ export default function HeroIntro() {
         </motion.h1>
       </div>
 
-      <div className="hero-col hero-col-side">
-        <motion.p className="hero-blurb" {...rise(0.2)}>
+      <div className="flex flex-col items-start gap-5">
+        <motion.p className="max-w-[44ch] text-base leading-[1.6] text-ink-secondary" {...rise(0.2)}>
           {intro.blurb}
         </motion.p>
 
-        <motion.div className="hero-actions" {...rise(0.3)}>
-          <TransitionLink href="/work" label="Work" className="btn hero-cta">
+        <motion.div className="flex flex-wrap items-center gap-6" {...rise(0.3)}>
+          <TransitionLink href="/work" label="Work" className={cta}>
             See my work
           </TransitionLink>
-          <TransitionLink href="/contact" label="Contact" className="hero-link link-subtle">
+          <TransitionLink href="/contact" label="Contact" className="link-subtle py-1 font-medium">
             Say hello
           </TransitionLink>
         </motion.div>

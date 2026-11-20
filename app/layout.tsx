@@ -28,16 +28,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full bg-canvas antialiased`}
       suppressHydrationWarning
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>
+      {/* The sparse lines (every 16px) make the page read as sitting on a canvas. `clip` (not hidden)
+          keeps the body from becoming a scroll container, which would break the sticky nav. */}
+      <body className="min-h-screen overflow-x-clip bg-canvas bg-[repeating-linear-gradient(to_bottom,transparent_0,transparent_15px,var(--color-canvas-line)_15px,var(--color-canvas-line)_16px)] font-sans text-ink transition-colors duration-400 ease-soft selection:bg-butter selection:text-ink">
         <PageTransition>
-          <div className="canvas">
-            <div className="surface">
+          {/* The canvas shows only at the sides; the surface runs flush to the top. */}
+          <div className="min-h-screen px-(--canvas-gutter)">
+            <div className="relative mx-auto flex min-h-screen max-w-(--layout-max) flex-col overflow-clip border-x border-border bg-surface transition-[background-color,border-color] duration-400 ease-soft">
               <SiteHeader />
               {children}
               <SiteFooter landscape={<SunflowerFooter />} />

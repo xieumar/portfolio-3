@@ -1,14 +1,17 @@
 @import "tailwindcss";
 
+/* `dark:` follows the data-theme attribute set by the theme toggle (not the OS setting). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-:root {
-  /* Global foundation */
+/* Design tokens. `static` keeps every variable in the output, so the landscape CSS can read them too.
+   Utilities such as bg-ink, text-ink-secondary and border-border read these variables, so dark mode
+   only has to re-assign them (see the data-theme="dark" block below). */
+@theme static {
   --color-ivory: #fdf8ea;
   --color-paper: #f8f4e9;
   --color-ink: #211f1a;
   --color-ink-secondary: #777267;
   --color-border: #e5dfd1;
-  --color-white: #ffffff;
 
   /* Outer canvas (slightly deeper than ivory so the surface reads as a page) */
   --color-canvas: #e8e1cd;
@@ -26,21 +29,31 @@
   --color-tomato: #e45b40;
   --color-leaf: #43835b;
 
-  /* Semantic environment aliases (sunflower is the default) */
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Semantic names for the active environment, so utilities read bg-surface / bg-soft / bg-accent. */
+@theme inline {
+  --color-surface: var(--env-background);
+  --color-soft: var(--env-soft);
+  --color-accent: var(--env-accent);
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+:root {
+  /* Environment aliases (sunflower is the default) */
   --env-background: var(--color-ivory);
   --env-accent: var(--color-golden);
   --env-soft: var(--color-butter);
   --env-green: var(--color-olive);
   --env-ink-line: var(--color-earth);
 
-  /* Nav, overlay and scrollbar */
-  --nav-shadow: rgba(33, 31, 26, 0.08);
   --scroll-thumb: rgba(119, 98, 74, 0.45);
   --scroll-thumb-hover: rgba(119, 98, 74, 0.8);
-
   color-scheme: light;
 
-  /* Layout */
+  /* Layout (responsive, shared by many components: px-(--pad-x), py-(--section-space), ...) */
   --layout-max: 1680px;
   --pad-x: 20px;
   --canvas-gutter: 8px;
@@ -49,8 +62,7 @@
   --radius-md: 8px;
   --radius-lg: 12px;
 
-  /* Motion */
-  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Motion (also read by the landscape CSS) */
   --dur-hover: 220ms;
   --dur-react: 450ms;
   --dur-sway: 4s;
@@ -84,7 +96,6 @@
   --color-ink: #ece6d3;
   --color-ink-secondary: #a3a9bd;
   --color-border: #26325a;
-  --color-white: #0b1127;
 
   --color-canvas: #070b1b;
   --color-canvas-line: rgba(160, 175, 230, 0.06);
@@ -93,28 +104,37 @@
   --color-earth: #b79b78;
   --color-olive: #9aa466;
 
-  --nav-shadow: rgba(0, 0, 0, 0.45);
   --scroll-thumb: rgba(183, 155, 120, 0.4);
   --scroll-thumb-hover: rgba(233, 173, 53, 0.85);
-
   color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--env-background);
-  --color-foreground: var(--color-ink);
-  --color-accent: var(--env-accent);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@layer base {
+  a {
+    transition: color var(--dur-hover) var(--ease-soft);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
 }
 
-html {
-  background-color: var(--color-canvas);
+/* Subtle underline-grow for text links (too many pieces for one class string). */
+@utility link-subtle {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 1px;
+  transition: background-size var(--dur-hover) var(--ease-soft);
+
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 1px;
+  }
 }
 
-/* Thin themed scrollbar. Chromium/Safari get a 4px track; Firefox (and anything without the
-   webkit pseudo-elements) gets the standard "thin" bar. The standard properties are kept out of
-   Chromium on purpose: when they are set it ignores the ::-webkit-scrollbar rules. */
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -141,126 +161,6 @@ html {
   }
 }
 
-body {
-  min-height: 100vh;
-  color: var(--color-ink);
-  font-family: var(--font-sans), system-ui, sans-serif;
-  background-color: var(--color-canvas);
-  /* Sparse horizontal lines (every 16px) so the page reads as sitting on a canvas */
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 15px,
-    var(--color-canvas-line) 15px,
-    var(--color-canvas-line) 16px
-  );
-  /* clip (not hidden) so the body never becomes a scroll container, which would break the sticky nav */
-  overflow-x: clip;
-  transition:
-    background-color 400ms var(--ease-soft),
-    color 400ms var(--ease-soft);
-}
-
-/* Canvas shows only at the sides; the surface runs flush to the top. */
-.canvas {
-  padding-inline: var(--canvas-gutter);
-  min-height: 100vh;
-}
-
-/* ==========================================================================
-   INNER WEBSITE SURFACE
-   ========================================================================== */
-.surface {
-  position: relative;
-  max-width: var(--layout-max);
-  min-height: 100vh;
-  margin-inline: auto;
-  display: flex;
-  flex-direction: column;
-  background: var(--env-background);
-  border: 1px solid var(--color-border);
-  border-block: 0;
-  overflow: clip; /* illustrations never bleed onto the canvas */
-  transition:
-    background-color 400ms var(--ease-soft),
-    border-color 400ms var(--ease-soft);
-}
-
-.surface-main {
-  flex: 1;
-  padding-inline: var(--pad-x);
-  padding-block: var(--section-space);
-}
-
-/* ==========================================================================
-   BASE COMPONENT LANGUAGE
-   ========================================================================== */
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: color var(--dur-hover) var(--ease-soft);
-}
-
-:focus-visible {
-  outline: 2px solid var(--color-ink);
-  outline-offset: 3px;
-  border-radius: var(--radius-sm);
-}
-
-::selection {
-  background: var(--color-butter);
-  color: var(--color-ink);
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--color-ink);
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    background-color var(--dur-hover) var(--ease-soft),
-    border-color var(--dur-hover) var(--ease-soft),
-    transform var(--dur-hover) var(--ease-soft);
-}
-
-.btn:hover {
-  border-color: var(--color-earth);
-}
-
-.btn:active {
-  transform: translateY(1px);
-}
-
-.btn-primary {
-  background: var(--env-accent);
-  border-color: var(--env-accent);
-}
-
-.btn-primary:hover {
-  background: color-mix(in srgb, var(--env-accent) 85%, white);
-  border-color: var(--color-earth);
-}
-
-/* Subtle underline-grow for text links */
-.link-subtle {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  background-size: 0 1px;
-  transition: background-size var(--dur-hover) var(--ease-soft);
-}
-
-.link-subtle:hover,
-.link-subtle:focus-visible {
-  background-size: 100% 1px;
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -270,564 +170,4 @@ a {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-
-/* ==========================================================================
-   SHARED LAYOUT: header, navigation, footer
-   ========================================================================== */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-/* Floating, centred navigation. The header has no height of its own: the pill sticks to the top of
-   the viewport and the page content scrolls beneath it. */
-.site-header {
-  position: sticky;
-  top: 14px;
-  z-index: 30;
-  height: 0;
-  display: flex;
-  justify-content: center;
-  padding-inline: var(--pad-x);
-  pointer-events: none;
-}
-
-.main-nav {
-  pointer-events: auto;
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  height: 52px;
-  padding: 5px;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--env-background) 84%, transparent);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 8px 28px var(--nav-shadow);
-  transition:
-    background-color 400ms var(--ease-soft),
-    border-color 400ms var(--ease-soft);
-}
-
-.nav-name {
-  display: inline-flex;
-  align-items: center;
-  height: 100%;
-  padding-inline: 1rem 0.75rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  border-radius: 999px;
-}
-
-.nav-list {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.nav-link {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  height: 40px;
-  padding-inline: 0.95rem;
-  font-weight: 500;
-  color: var(--color-ink-secondary);
-  transition: color var(--dur-hover) var(--ease-soft);
-}
-
-.nav-link:hover,
-.nav-link[aria-current="page"] {
-  color: var(--color-ink);
-}
-
-/* Active page: a small dot that slides between links (motion layoutId). */
-.nav-active {
-  position: absolute;
-  left: 50%;
-  bottom: 3px;
-  width: 4px;
-  height: 4px;
-  margin-left: -2px;
-  border-radius: 50%;
-  background: var(--env-accent);
-}
-
-.nav-sep {
-  width: 1px;
-  height: 20px;
-  margin-inline: 0.35rem 0.15rem;
-  background: var(--color-border);
-}
-
-.theme-toggle {
-  display: inline-grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--color-ink);
-  cursor: pointer;
-  transition: background-color var(--dur-hover) var(--ease-soft);
-}
-
-.theme-toggle:hover {
-  background: color-mix(in srgb, var(--color-ink) 8%, transparent);
-}
-
-.theme-toggle-icon {
-  display: inline-grid;
-  place-items: center;
-}
-
-.nav-toggle {
-  display: none;
-}
-
-@media (max-width: 767px) {
-  .main-nav {
-    width: 100%;
-    max-width: 420px;
-  }
-
-  .nav-name {
-    flex: 1;
-  }
-
-  .nav-sep {
-    display: none;
-  }
-
-  .nav-toggle {
-    display: inline-grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border: 0;
-    border-radius: 999px;
-    background: transparent;
-    cursor: pointer;
-    transition: background-color var(--dur-hover) var(--ease-soft);
-  }
-
-  .nav-toggle:hover {
-    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
-  }
-
-  .nav-toggle-bars,
-  .nav-toggle-bars::before {
-    display: block;
-    width: 18px;
-    height: 1.5px;
-    background: var(--color-ink);
-    transition: transform var(--dur-hover) var(--ease-soft);
-  }
-
-  .nav-toggle-bars {
-    position: relative;
-    transform: translateY(-3px);
-  }
-
-  .nav-toggle-bars::before {
-    content: "";
-    position: absolute;
-    top: 6px;
-  }
-
-  .nav-toggle-bars[data-open="true"] {
-    transform: rotate(45deg);
-  }
-
-  .nav-toggle-bars[data-open="true"]::before {
-    transform: translateY(-6px) rotate(-90deg);
-  }
-
-  /* The links drop down as a card under the pill. */
-  .nav-list {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 2px;
-    padding: 6px;
-    border: 1px solid var(--color-border);
-    border-radius: 24px;
-    background: var(--env-background);
-    box-shadow: 0 12px 32px var(--nav-shadow);
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-6px);
-    transition:
-      opacity var(--dur-hover) var(--ease-soft),
-      transform var(--dur-hover) var(--ease-soft),
-      visibility 0s linear var(--dur-hover);
-  }
-
-  .nav-list[data-open="true"] {
-    visibility: visible;
-    opacity: 1;
-    transform: none;
-    transition-delay: 0s;
-  }
-
-  .nav-link {
-    display: flex;
-    height: 46px;
-  }
-
-  .nav-active {
-    left: auto;
-    right: 1rem;
-    bottom: auto;
-    top: 50%;
-    margin: -2px 0 0;
-  }
-}
-
-/* ---------- full-screen page-name transition (see PageTransition) ----------
-   Two panels wipe up: the deeper golden accent underneath, the pale golden panel (the same colour as the
-   headline highlight) on top, carrying the destination's name. */
-.page-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: grid;
-  place-items: center;
-}
-
-.page-overlay-accent {
-  background: var(--env-accent);
-}
-
-.page-overlay-soft {
-  z-index: 101;
-  background: var(--env-soft);
-  color: var(--color-ink);
-}
-
-.page-overlay-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding-inline: var(--pad-x);
-  text-align: center;
-}
-
-.page-overlay-kicker {
-  margin: 0;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.875rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  opacity: 0.7;
-}
-
-.page-overlay-label {
-  display: flex;
-  justify-content: center;
-  font-size: clamp(3.5rem, 17vw, 13rem);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.05em;
-}
-
-.page-overlay-letter-mask {
-  display: inline-block;
-  overflow: hidden;
-  padding-bottom: 0.1em;
-}
-
-.page-overlay-letter {
-  display: inline-block;
-  transform-origin: 0 100%;
-}
-
-.page-overlay-track {
-  display: block;
-  width: min(220px, 50vw);
-  height: 3px;
-  margin-top: 1.5rem;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--color-ink) 12%, transparent);
-  overflow: hidden;
-}
-
-.page-overlay-fill {
-  display: block;
-  height: 100%;
-  background: var(--color-ink);
-  transform-origin: left center;
-}
-
-/* ---------- hero introduction ---------- */
-/* The hero is 90% of the viewport tall, so the field of flowers ends about 90% down the first screen. */
-.hero {
-  position: relative;
-  isolation: isolate;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 90vh;
-  min-height: 90svh;
-}
-
-.hero .ls-header {
-  border-bottom: 1px solid var(--color-border);
-}
-
-.hero-intro {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr;
-  align-content: center;
-  align-items: end;
-  gap: 2rem 4rem;
-  padding: 96px var(--pad-x) 40px; /* top clears the floating nav; left edge matches the inner pages */
-}
-
-@media (min-width: 900px) {
-  .hero-intro {
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-    column-gap: 3rem;
-  }
-}
-
-.hero-col {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.hero-col-side {
-  gap: 1.25rem;
-}
-
-/* The headline is written to sit on two lines; the width and size scale together to keep it so. */
-.hero-title {
-  margin: 0;
-  font-size: clamp(1.6rem, 3.8vw, 3.75rem);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.035em;
-  text-wrap: balance;
-}
-
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.hero-link {
-  padding-block: 0.25rem;
-  font-weight: 500;
-}
-
-/* The main button matches the highlighted word in the headline. */
-.hero-cta {
-  background: var(--env-soft);
-  border-color: var(--env-soft);
-}
-
-.hero-cta:hover {
-  background: color-mix(in srgb, var(--env-soft) 80%, var(--env-accent));
-  border-color: var(--env-soft);
-}
-
-/* The headline sits at the top of its row; the side column still lines up with the row's bottom. */
-.hero-col-main {
-  align-self: start;
-}
-
-/* The highlighted, cycling word in the headline. The box clips the sliding words; its width is animated. */
-.hero-rotator {
-  display: inline-block;
-  vertical-align: top;
-  overflow: hidden;
-  padding-block: 0.04em;
-  margin-block: -0.04em;
-  background: var(--env-soft);
-  white-space: nowrap;
-  transition: background-color 400ms var(--ease-soft);
-}
-
-.hero-rotator-word {
-  display: inline-block;
-  padding-inline: 0.08em;
-}
-
-.hero-blurb {
-  margin: 0;
-  max-width: 44ch;
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--color-ink-secondary);
-}
-
-/* A soft glow behind the hero: warm sun by day, cool moonlight at night. */
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      ellipse 55% 60% at 82% 12%,
-      color-mix(in srgb, var(--env-accent) 22%, transparent),
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse 40% 45% at 8% 75%,
-      color-mix(in srgb, var(--env-accent) 10%, transparent),
-      transparent 70%
-    );
-}
-
-:root[data-theme="dark"] .hero::before {
-  background: radial-gradient(
-    ellipse 55% 60% at 82% 12%,
-    rgba(120, 150, 255, 0.14),
-    transparent 70%
-  );
-}
-
-/* ---------- simple inner pages ---------- */
-.surface-main > .page-title:first-child {
-  margin-top: 40px;
-}
-
-.page-title {
-  margin: 0;
-  font-size: clamp(2.5rem, 7vw, 5rem);
-  font-weight: 600;
-  letter-spacing: -0.045em;
-  line-height: 1.05;
-}
-
-.page-lede {
-  margin: 1rem 0 0;
-  max-width: 52ch;
-  color: var(--color-ink-secondary);
-}
-
-/* Footer */
-/* The illustration's sky blends into the page; the column area below sits on faint ruled paper. */
-.site-footer {
-  position: relative;
-}
-
-.site-footer-body {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 27px,
-    var(--color-canvas-line) 27px,
-    var(--color-canvas-line) 28px
-  );
-}
-
-.site-footer-body {
-  padding: 64px var(--pad-x) 32px;
-}
-
-.footer-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 40px;
-}
-
-@media (min-width: 640px) {
-  .footer-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .footer-grid {
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
-    gap: 48px;
-  }
-}
-
-/* Column heading: short golden rule above a sentence-case title */
-.footer-label {
-  margin: 0 0 1.25rem;
-  padding-top: 0.9rem;
-  position: relative;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-ink);
-}
-
-.footer-label::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 28px;
-  height: 3px;
-  background: var(--env-accent);
-}
-
-.footer-strong {
-  font-size: 1.375rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-}
-
-.footer-text {
-  margin: 0.75rem 0 0;
-  color: var(--color-ink-secondary);
-}
-
-.footer-list {
-  display: grid;
-  gap: 0.6rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.footer-link {
-  color: var(--color-ink-secondary);
-}
-
-.footer-link:hover {
-  color: var(--color-ink);
-}
-
-.footer-legal {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  margin-top: 72px;
-  padding-top: 24px;
-  border-top: 1px solid var(--color-border);
-  font-size: 0.8125rem;
-  text-align: center;
-  color: var(--color-ink-secondary);
-}
-
-.footer-legal p {
-  margin: 0;
 }
